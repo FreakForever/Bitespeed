@@ -53,15 +53,15 @@ app.post('/identify', async (req, res) => {
     }
 
     // Step 3: Process existing contacts
-    const earliestContact = existingContacts[0];
-    const uniqueEmails = new Set(existingContacts.map(c => c.email).filter(Boolean));
-    const uniquePhones = new Set(existingContacts.map(c => c.phoneNumber).filter(Boolean));
+    const earliestContact = existingContacts[0]; // this will be our primary
+    // const uniqueEmails = new Set(existingContacts.map(c => c.email).filter(Boolean));
+    // const uniquePhones = new Set(existingContacts.map(c => c.phoneNumber).filter(Boolean));
 
-    // Include new email/phoneNumber
-    if (email) uniqueEmails.add(email);
-    if (phoneNumber) uniquePhones.add(phoneNumber);
+    // // Include new email/phoneNumber
+    // if (email) uniqueEmails.add(email);
+    // if (phoneNumber) uniquePhones.add(phoneNumber);
 
-    // Update all other contacts to secondary if they are not the primary contact
+    // exceppt earliest contact all would be secondary
     for (let contact of existingContacts) {
       if (contact.id !== earliestContact.id) {
         if (contact.linkPrecedence !== 'secondary' || contact.linkedId !== earliestContact.id) {
@@ -117,26 +117,26 @@ app.post('/identify', async (req, res) => {
     });
 
     // Consolidate emails and phone numbers
-    const consolidatedEmails = Array.from(
+    const finalEmails = Array.from(
       new Set(allRelatedContacts.map(c => c.email).filter(Boolean))
     );
-    const consolidatedPhones = Array.from(
+    const finalPhones = Array.from(
       new Set(allRelatedContacts.map(c => c.phoneNumber).filter(Boolean))
     );
-    console.log(`Consolidated Emails:${consolidatedEmails}`)
-    console.log(`Consolidated Phones:${consolidatedPhones}`)
+    // console.log(`Consolidated Emails:${finalEmails}`)
+    // console.log(`Consolidated Phones:${finalPhones}`)
 
     // Extract secondary contact IDs
     const secondaryContactIds = allRelatedContacts
       .filter(c => c.id !== earliestContact.id)
       .map(c => c.id);
 
-    // Step 5: Return the consolidated response
+    // Step 5: Finally update the consoldated array into the respective field
     return res.status(200).json({
       contact: {
         primaryContactId: earliestContact.id,
-        emails: consolidatedEmails,
-        phoneNumbers: consolidatedPhones,
+        emails: finalEmails,
+        phoneNumbers: finalPhones,
         secondaryContactIds,
       },
     });
