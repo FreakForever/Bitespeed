@@ -11,7 +11,7 @@ app.post("/identify", async (req, res) => {
   if (!email && !phoneNumber) {
     return res
       .status(400)
-      .json({ error: "Email or phone number is required!" });
+      .json({ error: "Credentials are required!" });
   }
 
   try {
