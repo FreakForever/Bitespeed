@@ -10,8 +10,26 @@ This API helps manage and identify contacts based on email and phone number. It 
 
 - **Description**: Creates or updates contact information in the database. If a contact with the provided email or phone number exists, it associates it with a primary contact. Otherwise, it creates a new primary contact.
 
-## Request Format
+-- ** Body
+``` {
+  "email": "example@example.com",
+  "phoneNumber": "1234567890"
+}
+{
+  "email": "john.doe@example.com",
+  "phoneNumber": "9876543210"
+}
+```
 
-### Headers
-```json
-Content-Type: application/json
+--**Expected Response
+```
+{
+  "contact": {
+    "primaryContactId": 1,
+    "emails": ["example@example.com", "another@example.com"],
+    "phoneNumbers": ["1234567890", "9876543210"],
+    "secondaryContactIds": [2, 3]
+  }
+}
+
+```
