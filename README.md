@@ -10,7 +10,7 @@ This API helps manage and identify contacts based on email and phone number. It 
 
 - **Description**: Creates or updates contact information in the database. If a contact with the provided email or phone number exists, it associates it with a primary contact. Otherwise, it creates a new primary contact.
 
--- ** Body
+### Body
 ``` {
   "email": "example@example.com",
   "phoneNumber": "1234567890"
@@ -21,7 +21,7 @@ This API helps manage and identify contacts based on email and phone number. It 
 }
 ```
 
---**Expected Response
+### Expected Response
 ```
 {
   "contact": {
@@ -33,3 +33,12 @@ This API helps manage and identify contacts based on email and phone number. It 
 }
 
 ```
+
+For running in local:
+1. Clone the repo ```git clone https://github.com/your-repo/identify-api.git```
+2. ```npm install```
+3. ```npx prisma migrate dev```
+4. ```node index.js```
+
+For testing Use the below deployed link:
+https://bitespeed-a6y4.onrender.com/identify
