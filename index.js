@@ -15,7 +15,6 @@ app.post("/identify", async (req, res) => {
   }
 
   try {
-    // Fetch contacts matching email or phone number
     const contacts = await prisma.contact.findMany({
       where: {
         OR: [{ email }, { phoneNumber }],
@@ -35,14 +34,15 @@ app.post("/identify", async (req, res) => {
       return res.status(201).json({
         contact: {
           primaryContactId: newContact.id,
-          emails: [newContact.email].filter(Boolean),
-          phoneNumbers: [newContact.phoneNumber].filter(Boolean),
+          emails: [newContact.email].filter((value) => value !== null),
+          phoneNumbers: [newContact.phoneNumber].filter(
+            (value) => value !== null
+          ),
           secondaryContactIds: [],
         },
       });
     } else {
-      // Case 2: Existing contacts found
-      contacts.sort((a, b) => a.id - b.id); 
+      contacts.sort((a, b) => a.id - b.id);
       const primaryContact = contacts[0];
       const updatedContacts = [];
 
@@ -64,11 +64,12 @@ app.post("/identify", async (req, res) => {
           }
         }
       }
-      const emailSet = new Set(contacts.map((c) => c.email).filter(Boolean));
-      const phoneNumberSet = new Set(
-        contacts.map((c) => c.phoneNumber).filter(Boolean)
+      const emailSet = new Set(
+        contacts.map((c) => c.email).filter((value) => value !== null)
       );
-
+      const phoneNumberSet = new Set(
+        contacts.map((c) => c.phoneNumber).filter((value) => value !== null)
+      );
       if (emailSet.has(email) && phoneNumberSet.has(phoneNumber)) {
         return res.status(200).json({
           contact: {
@@ -109,17 +110,7 @@ app.post("/identify", async (req, res) => {
   }
 });
 
-// Start the server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
-
-
-
-
-
-
-
-
-
